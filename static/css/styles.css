@@ -1,0 +1,35 @@
+.content, .tab-pane {
+    padding-top: 15px;
+}
+.video_preview{
+    max-width: 100%;
+    display: block;
+    float: left;
+    height: auto;
+    width: 100%;
+}
+.logo img{
+    display: block;
+    width: 100%;
+    float: left;
+    padding: 15px;
+}
+.header{
+    background: #333;
+}
+.menu a{
+    background: #fff;
+    padding: 15px;
+    color: #3790ed;
+    text-decoration: none;
+    top: 40%;
+    position: relative;
+}
+.menu a:hover{
+    background: #3790ed;
+    padding: 15px;
+    color: #fff;
+    text-decoration: none;
+    top: 40%;
+    position: relative;
+}
