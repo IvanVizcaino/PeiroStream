@@ -1,10 +1,15 @@
 {% extends "layout.html" %}
   {% block body %}
+  {% if errors%}
+  <div class="alert alert-danger" role="alert">
+    {{ errors }}
+  </div>
+  {% endif %}
   <div class="row content">
-    <div class="col-md-6 col-xs-4">
+    <div class="col-md-6 col-sm-4 col-12">
       <img class="video_preview" src="{{ url_for('video_feed') }}">
     </div>
-    <div class="col-md-6 col-xs-8">
+    <div class="col-md-6 col-sm-8 col-12">
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#info">Info</a>
@@ -28,7 +33,7 @@
           <form action="/">
             <select name="camera">
               {% for c in cameras %}
-              <option value="{{ c }}">{{ c }}</option>
+              <option value="{{ c }}">Cámara {{ c + 1 }}</option>
               {% endfor %}
             </select>
             <button class="btn btn-primary">Ver Cámara</button>

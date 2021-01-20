@@ -13,6 +13,7 @@ import datetime
 import imutils
 import time
 import cv2
+import numpy as np
 from flask import request
 
 # initialize the output frame and a lock used to ensure thread-safe
@@ -32,8 +33,17 @@ time.sleep(2.0)
 
 @app.route("/", methods = ['GET','POST'])
 def index():
+    try:
+        global vs
+        error =  None
+        if request.args.get('camera') is not None:
+            vs.stop()
+            vs = VideoStream(src=int(request.args.get('camera'))).start()
+            time.sleep(2.0)
+    except:
+        error = "No pudimos conectar con la cámara"
     # return the rendered template
-    return render_template("index.html", base_url = request.base_url, cameras = ['Prueba1', 'Prueba2'])
+    return render_template("index.html", base_url = request.base_url, cameras = [0,1], errors = error)
 
 def stream(frameCount):
     # grab global references to the video stream, output frame, and
@@ -45,10 +55,25 @@ def stream(frameCount):
     while True:
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
-        
-        frame = vs.read()
-        frame = imutils.resize(frame, width=1280)
+        try:
+            frame = vs.read()
+            frame = imutils.resize(frame, width=1280)
+        except:
+            frame = np.zeros((400,400,3), np.uint8)
 
+            font                   = cv2.FONT_HERSHEY_SIMPLEX
+            bottomLeftCornerOfText = (100,200)
+            fontScale              = 2
+            fontColor              = (255,255,255)
+            lineType               = 2
+
+            cv2.putText(frame,'Error', 
+                bottomLeftCornerOfText, 
+                font, 
+                fontScale,
+                fontColor,
+                lineType)
+           
         # acquire the lock, set the output frame, and release the
         # lock
         with lock:
