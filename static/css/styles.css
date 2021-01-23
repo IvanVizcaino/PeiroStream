@@ -24,9 +24,8 @@ body{
     background: #333;
 }
 .menu a{
-    background: #fff;
     padding: 15px;
-    color: #3790ed;
+    color: #fff;
     text-decoration: none;
     top: 40%;
     position: relative;
@@ -38,6 +37,10 @@ body{
     text-decoration: none;
     position: relative;
 }
+.shutdown{
+    float: right;
+}
+
 @media only screen and (max-width: 400px) {
     .logo img{
         max-width: 70%;

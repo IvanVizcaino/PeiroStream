@@ -15,12 +15,15 @@ import time
 import cv2
 import numpy as np
 from flask import request
+from subprocess import call
+
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
 # are viewing tthe stream)
 outputFrame = None
 lock = threading.Lock()
+resolution_width = 1280
 
 # initialize a flask object
 app = Flask(__name__)
@@ -34,8 +37,10 @@ time.sleep(2.0)
 @app.route("/", methods = ['GET','POST'])
 def index():
     try:
-        global vs
+        global vs, resolution_width
         error =  None
+        if request.args.get('resolution') is not None:
+            resolution_width = int(request.args.get('resolution'))
         if request.args.get('camera') is not None:
             vs.stop()
             vs = VideoStream(src=int(request.args.get('camera'))).start()
@@ -48,7 +53,7 @@ def index():
 def stream(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global vs, outputFrame, lock
+    global vs, outputFrame, lock, resolution_width
 
 
     # loop over frames from the video stream
@@ -57,7 +62,8 @@ def stream(frameCount):
         # convert the frame to grayscale, and blur it
         try:
             frame = vs.read()
-            frame = imutils.resize(frame, width=1280)
+            frame = imutils.resize(frame, width=resolution_width)
+            #frame = cv2.fastNlMeansDenoisingColored(frame,None,10,10,7,21)
         except:
             frame = np.zeros((400,400,3), np.uint8)
 
@@ -116,7 +122,12 @@ def youtube():
 
 @app.route("/settings", methods = ['GET','POST'])
 def settings():
-    return render_template("settings.html")
+    return render_template("settings.html", resolution_width = resolution_width)
+
+@app.route("/shutdown")
+def shutdown():
+    call("sudo shutdown -h now", shell=True)
+
 
 # check to see if this is the main thread of execution
 if __name__ == '__main__':

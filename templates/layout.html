@@ -8,12 +8,14 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/all.css') }}">
     <!-- Estilos de la aplicación-->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <!-- Librerias JS-->
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </head>
   <body>
     <div class="container-fluid">
@@ -26,6 +28,7 @@
           <a href="/">Emisión interna</a>
           <a href="/youtube">Emisión YouTube</a>
           <a href="/settings">Configuración</a>
+          <a href="#" class="shutdown"><i class="fas fa-power-off"></i></a>
         </div>
       </div>
     {% endblock %}
