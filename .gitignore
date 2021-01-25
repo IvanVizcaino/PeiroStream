@@ -1,0 +1,7 @@
+.history
+*.pyc
+__pycache__
+
+credentials.json
+creden.json
+youtube.py-oauth2.json

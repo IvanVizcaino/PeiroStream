@@ -7,13 +7,19 @@ from imutils.video import VideoStream
 from flask import Response
 from flask import Flask
 from flask import render_template
+from flask import request
 import threading
 import argparse
 import datetime
 import imutils
 import time
 import cv2
-from flask import request
+import json
+
+# Api key that will be used to access the Youtube Live API
+apiKey = ""
+with open('credentials.json') as json_file:
+    apiKey = json.load(json_file)['apiKey']
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
@@ -30,22 +36,23 @@ app = Flask(__name__)
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
-@app.route("/", methods = ['GET','POST'])
+
+@app.route("/", methods=['GET', 'POST'])
 def index():
     # return the rendered template
-    return render_template("index.html", base_url = request.base_url, cameras = ['Prueba1', 'Prueba2'])
+    return render_template("index.html", base_url=request.base_url, cameras=['Prueba1', 'Prueba2'])
+
 
 def stream(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
     global vs, outputFrame, lock
 
-
     # loop over frames from the video stream
     while True:
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
-        
+
         frame = vs.read()
         frame = imutils.resize(frame, width=1280)
 
@@ -53,7 +60,8 @@ def stream(frameCount):
         # lock
         with lock:
             outputFrame = frame.copy()
-        
+
+
 def generate():
     # grab global references to the output frame and lock variables
     global outputFrame, lock
@@ -75,34 +83,38 @@ def generate():
                 continue
 
         # yield the output frame in the byte format
-        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
-            bytearray(encodedImage) + b'\r\n')
+        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
+              bytearray(encodedImage) + b'\r\n')
+
 
 @app.route("/video_feed")
 def video_feed():
     # return the response generated along with the specific media
     # type (mime type)
     return Response(generate(),
-        mimetype = "multipart/x-mixed-replace; boundary=frame")
+                    mimetype="multipart/x-mixed-replace; boundary=frame")
 
-@app.route("/youtube", methods = ['GET','POST'])
+
+@app.route("/youtube", methods=['GET', 'POST'])
 def youtube():
     return render_template("youtube.html")
 
-@app.route("/settings", methods = ['GET','POST'])
+
+@app.route("/settings", methods=['GET', 'POST'])
 def settings():
     return render_template("settings.html")
+
 
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
     # construct the argument parser and parse command line arguments
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--ip", type=str, required=True,
-        help="ip address of the device")
+                    help="ip address of the device")
     ap.add_argument("-o", "--port", type=int, required=True,
-        help="ephemeral port number of the server (1024 to 65535)")
+                    help="ephemeral port number of the server (1024 to 65535)")
     ap.add_argument("-f", "--frame-count", type=int, default=32,
-        help="# of frames used to construct the background model")
+                    help="# of frames used to construct the background model")
     args = vars(ap.parse_args())
 
     # start a thread that will perform motion detection
@@ -113,7 +125,7 @@ if __name__ == '__main__':
 
     # start the flask app
     app.run(host=args["ip"], port=args["port"], debug=True,
-        threaded=True, use_reloader=False)
+            threaded=True, use_reloader=False)
 
 # release the video stream pointer
 vs.stop()
