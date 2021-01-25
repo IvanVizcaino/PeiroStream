@@ -1,7 +1,14 @@
 {% extends "layout.html" %}
   {% block body %}
   <div class="row">
-    <h1>Próximamente</h1>
+    <h2>Resolución</h2>
+    <form action="/">
+    	<select name="resolution">
+    		<option value="1280" {% if resolution_width == 1280 %} selected="selected"{% endif %}>720p (HD)</option>
+    		<option value="1920" {% if resolution_width == 1920 %} selected="selected"{% endif %}>1080 (FullHD)</option>
+    	</select>
+    	<button class="btn btn-primary">Guardar</button>
+    </form>
   </div>
 
     

@@ -4,28 +4,31 @@
     <title>PeiroStream</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/all.css') }}">
     <!-- Estilos de la aplicación-->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <!-- Librerias JS-->
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </head>
   <body>
     <div class="container-fluid">
     {% block header %}
       <div class="row header">
-        <div class="col-md-3 col-xs-4 logo">
+        <div class="col-md-3 col-sm-3 col-12 logo">
           <img src="{{ url_for('static', filename='img/logo_peiroscenic_blanco.png')}}"/>
         </div>
-        <div class="col-md-9 col-xs-8 menu">
+        <div class="col-md-9 col-sm-9 col-12 menu">
           <a href="/">Emisión interna</a>
           <a href="/youtube">Emisión YouTube</a>
           <a href="/settings">Configuración</a>
+          <a href="#" class="shutdown"><i class="fas fa-power-off"></i></a>
         </div>
       </div>
     {% endblock %}

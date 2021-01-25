@@ -14,18 +14,17 @@ import datetime
 import imutils
 import time
 import cv2
-import json
+import numpy as np
+from flask import request
+from subprocess import call
 
-# Api key that will be used to access the Youtube Live API
-apiKey = ""
-with open('credentials.json') as json_file:
-    apiKey = json.load(json_file)['apiKey']
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful for multiple browsers/tabs
 # are viewing tthe stream)
 outputFrame = None
 lock = threading.Lock()
+resolution_width = 1280
 
 # initialize a flask object
 app = Flask(__name__)
@@ -39,22 +38,49 @@ time.sleep(2.0)
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    try:
+        global vs, resolution_width
+        error = None
+        if request.args.get('resolution') is not None:
+            resolution_width = int(request.args.get('resolution'))
+        if request.args.get('camera') is not None:
+            vs.stop()
+            vs = VideoStream(src=int(request.args.get('camera'))).start()
+            time.sleep(2.0)
+    except:
+        error = "No pudimos conectar con la cámara"
     # return the rendered template
-    return render_template("index.html", base_url=request.base_url, cameras=['Prueba1', 'Prueba2'])
+    return render_template("index.html", base_url=request.base_url, cameras=[0, 1], errors=error)
 
 
 def stream(frameCount):
     # grab global references to the video stream, output frame, and
     # lock variables
-    global vs, outputFrame, lock
+    global vs, outputFrame, lock, resolution_width
 
     # loop over frames from the video stream
     while True:
         # read the next frame from the video stream, resize it,
         # convert the frame to grayscale, and blur it
+        try:
+            frame = vs.read()
+            frame = imutils.resize(frame, width=resolution_width)
+            #frame = cv2.fastNlMeansDenoisingColored(frame,None,10,10,7,21)
+        except:
+            frame = np.zeros((400, 400, 3), np.uint8)
 
-        frame = vs.read()
-        frame = imutils.resize(frame, width=1280)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            bottomLeftCornerOfText = (100, 200)
+            fontScale = 2
+            fontColor = (255, 255, 255)
+            lineType = 2
+
+            cv2.putText(frame, 'Error',
+                        bottomLeftCornerOfText,
+                        font,
+                        fontScale,
+                        fontColor,
+                        lineType)
 
         # acquire the lock, set the output frame, and release the
         # lock
@@ -102,7 +128,12 @@ def youtube():
 
 @app.route("/settings", methods=['GET', 'POST'])
 def settings():
-    return render_template("settings.html")
+    return render_template("settings.html", resolution_width=resolution_width)
+
+
+@app.route("/shutdown")
+def shutdown():
+    call("sudo shutdown -h now", shell=True)
 
 
 # check to see if this is the main thread of execution

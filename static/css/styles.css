@@ -1,3 +1,9 @@
+body{
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    display: block;
+}
 .content, .tab-pane {
     padding-top: 15px;
 }
@@ -18,9 +24,8 @@
     background: #333;
 }
 .menu a{
-    background: #fff;
     padding: 15px;
-    color: #3790ed;
+    color: #fff;
     text-decoration: none;
     top: 40%;
     position: relative;
@@ -30,6 +35,31 @@
     padding: 15px;
     color: #fff;
     text-decoration: none;
-    top: 40%;
     position: relative;
 }
+.shutdown{
+    float: right;
+}
+
+@media only screen and (max-width: 400px) {
+    .logo img{
+        max-width: 70%;
+        margin: 0 auto;
+        float: none;
+    }
+    .menu a{
+        max-width: 30%;
+        width: 100%;
+        display: block;
+        top: 0;
+        float: left;
+        margin-right: 1%;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        height: 66px;
+        vertical-align: middle;
+        margin-bottom: 5px;
+    }
+
+ }
