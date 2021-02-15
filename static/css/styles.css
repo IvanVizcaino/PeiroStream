@@ -13,6 +13,7 @@ body{
     float: left;
     height: auto;
     width: 100%;
+    min-height: calc(50vw * 0.56);
 }
 .logo img{
     display: block;
@@ -37,11 +38,11 @@ body{
     text-decoration: none;
     position: relative;
 }
-.shutdown{
+.shutdown, #stopStreaming, #statusOffline{
     float: right;
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 414px) {
     .logo img{
         max-width: 70%;
         margin: 0 auto;
@@ -60,6 +61,9 @@ body{
         height: 66px;
         vertical-align: middle;
         margin-bottom: 5px;
+    }
+    .video_preview{
+        min-height: calc(100vw * 0.56);
     }
 
  }

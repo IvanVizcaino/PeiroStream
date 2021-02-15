@@ -7,7 +7,17 @@
   {% endif %}
   <div class="row content">
     <div class="col-md-6 col-sm-4 col-12">
-      <img class="video_preview" src="{{ url_for('video_feed') }}">
+        <video-js id="vid1" class="vjs-default-skin video_preview" controls>
+          <source
+             src="{{ base_url }}:8080/hls/directo.m3u8"
+             type="application/x-mpegURL">
+        </video-js>
+        <script src="{{ url_for('static', filename='js/video.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/videojs-http-streaming.min.js') }}"></script>
+        <script>
+        var player = videojs('vid1');
+        player.play();
+        </script>        
     </div>
     <div class="col-md-6 col-sm-8 col-12">
       <ul class="nav nav-tabs">
@@ -24,8 +34,8 @@
         <div class="tab-pane container active" id="info">
           <p>Puedes acceder a la cámara desde las siguientes direcciones:
             <ol>
-              <li>Local: {{ base_url }}video_feed</li>
-              <li>Remoto: http://peiroscenic.ddns:8000/video_feed</li>
+              <li>Local: {{ base_url }}:1935/show/directo</li>
+              <li>Remoto: http://peiroscenic.ddns:1935/show/directo</li>
             </ol>
           </p>
         </div>

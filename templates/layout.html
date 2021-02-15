@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/all.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/video-js.css') }}">
     <!-- Estilos de la aplicación-->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <!-- Librerias JS-->
@@ -25,10 +26,21 @@
           <img src="{{ url_for('static', filename='img/logo_peiroscenic_blanco.png')}}"/>
         </div>
         <div class="col-md-9 col-sm-9 col-12 menu">
-          <a href="/">Emisión interna</a>
-          <a href="/youtube">Emisión YouTube</a>
-          <a href="/settings">Configuración</a>
+          <a href="/"><i class="fas fa-desktop"></i></a>
+          <a href="/youtube"><i class="fab fa-youtube"></i></a>
+          <a href="/settings"><i class="fas fa-cogs"></i></a>
+          <!--Elementos a la derecha del menu-->
           <a href="#" class="shutdown"><i class="fas fa-power-off"></i></a>
+          {% if status == 'live' %}
+            <a href="#" id="stopStreaming">
+              <span>Estado: <b style="color:green; margin-right: 5px;">{{ status }}</b></span><i class="fas fa-stop-circle"></i>
+            </a>
+          {% else %}
+            <a href="#" id="statusOffline">
+              <span>Estado: <b style="color:red">{{ status }}</b></span>
+            </a>
+          {% endif %}
+          
         </div>
       </div>
     {% endblock %}
