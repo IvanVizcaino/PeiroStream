@@ -36,7 +36,7 @@ def index():
     except:
         error = "No pudimos conectar con la cámara"
     # return the rendered template
-    return render_template("index.html", base_url=request.base_url, cameras=[0, 1], errors=error, status=status)
+    return render_template("index.html", base_url=request.base_url.replace(':8000/',''), cameras=[0, 1], errors=error, status=status)
 
 @app.route("/youtube", methods=['GET', 'POST'])
 def youtube():
@@ -57,15 +57,39 @@ def localStreaming():
 
 @app.route("/stop")
 def stopStreaming():
+    global status
     listOfProcessIds = process.findProcessIdByName('ffmpeg')
     try:
         if len(listOfProcessIds) > 0:
             for elem in listOfProcessIds:
-                call("sudo kill " + elem['pid'], shell=True)
-                #os.kill(elem['pid'], signal.SIGKILL)
-    except:
+                call("sudo kill " + str(elem['pid']), shell=True)
+                status = 'offline'
+    except Exception as e:
         return jsonify(
             result=False,
+            message=str(e)
+        )
+    return jsonify(
+            result=True,
+        )
+@app.route("/start")
+def startStreaming():
+    global status
+    try:
+        if status != 'live':
+            t = threading.Thread(target=localStreaming)
+            t.daemon = False
+            t.start()
+        else:
+            return jsonify(
+            result=False,
+            message="No esta parado"
+        )
+    except Exception as e:
+        status = "offline"
+        return jsonify(
+            result=False,
+            message=str(e)
         )
     return jsonify(
             result=True,
@@ -86,7 +110,7 @@ if __name__ == '__main__':
     # start a thread that will perform motion detection
     try:
         t = threading.Thread(target=localStreaming)
-        t.daemon = True
+        t.daemon = False
         t.start()
     except:
         status = "offline"

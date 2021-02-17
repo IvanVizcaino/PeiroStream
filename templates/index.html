@@ -34,8 +34,8 @@
         <div class="tab-pane container active" id="info">
           <p>Puedes acceder a la cámara desde las siguientes direcciones:
             <ol>
-              <li>Local: {{ base_url }}:1935/show/directo</li>
-              <li>Remoto: http://peiroscenic.ddns:1935/show/directo</li>
+              <li>Local: {{ base_url | replace("http", "rtmp") }}:1935/show/directo</li>
+              <li>Remoto: rtmp://peiroscenic.ddns:1935/show/directo</li>
             </ol>
           </p>
         </div>

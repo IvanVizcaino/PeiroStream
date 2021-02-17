@@ -30,6 +30,7 @@ body{
     text-decoration: none;
     top: 40%;
     position: relative;
+    font-size: 30px;
 }
 .menu a:hover{
     background: #3790ed;
@@ -38,7 +39,7 @@ body{
     text-decoration: none;
     position: relative;
 }
-.shutdown, #stopStreaming, #statusOffline{
+.shutdown, #stopStreaming, #startStreaming{
     float: right;
 }
 
